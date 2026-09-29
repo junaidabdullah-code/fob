@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up | FOB</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #e0fbfc 0%, #c2f0f7 55%, #a8e8f0 100%);
+      color: #0f3d44;
+      padding: 2rem 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: absolute;
+      background: rgba(255, 255, 255, 0.4);
+      animation: float 9s ease-in-out infinite;
+    }
+    body::before { width: 220px; height: 220px; top: -50px; left: -50px; }
+    body::after  { width: 300px; height: 300px; bottom: -90px; right: -70px; animation-delay: -4s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-22px); }
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 420px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 2px solid #0891b2;
+      padding: 2.5rem 2rem;
+      animation: pop 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes pop {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .brand {
+      text-align: center;
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #0891b2;
+      margin-bottom: 0.4rem;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #0f3d44;
+      margin-bottom: 1.75rem;
+    }
+
+    .alert {
+      padding: 0.7rem 0.9rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.88rem;
+      border: 2px solid #dc2626;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .field label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: #4a7278;
+    }
+
+    .field input {
+      padding: 0.7rem 0.85rem;
+      font-size: 0.98rem;
+      font-family: inherit;
+      color: #0f3d44;
+      background: #ffffff;
+      border: 2px solid #0891b2;
+      outline: none;
+      transition: box-shadow 0.15s ease;
+    }
+
+    .field input::placeholder { color: #9ab8bc; }
+
+    .field input:focus {
+      box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.25);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: inherit;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      cursor: pointer;
+      background: transparent;
+      color: #0891b2;
+      border: 2px solid #0891b2;
+      margin-top: 0.4rem;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .btn:hover {
+      background: #0891b2;
+      color: #ffffff;
+    }
+
+    .btn:active { transform: translateY(1px); }
+
+    .alt {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.88rem;
+      color: #4a7278;
+    }
+
+    .alt a {
+      color: #0891b2;
+      font-weight: 700;
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      transition: border-color 0.15s ease;
+    }
+
+    .alt a:hover { border-bottom-color: #0891b2; }
+
+    .home {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.8rem;
+    }
+
+    .home a { color: #7b9ea4; text-decoration: none; }
+    .home a:hover { color: #0891b2; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="brand">FOB</div>
+    <h1>Create your account</h1>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div class="alert"><%= error %></div>
+    <% } %>
+
+    <form action="/auth/signup" method="POST" class="form">
+      <div class="field">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          placeholder="Your full name"
+          value="<%= typeof old !== 'undefined' && old.name ? old.name : '' %>"
+          required
+          autocomplete="name"
+        />
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="you@example.com"
+          value="<%= typeof old !== 'undefined' && old.email ? old.email : '' %>"
+          required
+          autocomplete="email"
+        />
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="At least 6 characters"
+          minlength="6"
+          required
+          autocomplete="new-password"
+        />
+      </div>
+
+      <button type="submit" class="btn">Sign Up</button>
+    </form>
+
+    <p class="alt">
+      Already have an account? <a href="/login">Log in</a>
+    </p>
+
+    <p class="home">
+      <a href="/">← Back to home</a>
+    </p>
+  </main>
+  <script>
+    /* =====================================================
+   auth.js — handles the signup form
+   ===================================================== */
+
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('signup-form');
+  if (!form) return;
+
+  const btn = form.querySelector('button[type="submit"]');
+
+  // ---------- helpers ----------
+  function showError(message) {
+    let box = form.querySelector('.js-error');
+    if (!box) {
+      box = document.createElement('div');
+      box.className = 'alert js-error';
+      box.style.cssText =
+        'padding:.7rem .9rem;margin-bottom:1.25rem;font-size:.88rem;' +
+        'border:2px solid #dc2626;background:#fee2e2;color:#991b1b;';
+      form.prepend(box);
+    }
+    box.textContent = message;
+    box.style.display = 'block';
+  }
+
+  function hideError() {
+    const box = form.querySelector('.js-error');
+    if (box) box.style.display = 'none';
+  }
+
+  function setLoading(loading) {
+    if (loading) {
+      btn.dataset.original = btn.textContent;
+      btn.textContent = 'Creating account…';
+      btn.disabled = true;
+    } else {
+      btn.textContent = btn.dataset.original || 'Sign Up';
+      btn.disabled = false;
+    }
+  }
+
+  // ---------- submit ----------
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideError();
+
+    const name     = form.name.value.trim();
+    const email    = form.email.value.trim();
+    const password = form.password.value;
+
+    // client-side checks
+    if (!name || !email || !password) return showError('All fields are required');
+    if (name.length < 2)              return showError('Name must be at least 2 characters');
+    if (!/^\S+@\S+\.\S+$/.test(email)) return showError('Please enter a valid email');
+    if (password.length < 6)          return showError('Password must be at least 6 characters');
+
+    setLoading(true);
+
+    try {
+      const res = await fetch('/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        setLoading(false);
+        return showError(data.error || 'Signup failed');
+      }
+
+      window.location.href = data.redirect || '/';
+    } catch (err) {
+      setLoading(false);
+      showError('Network error — please try again');
+    }
+  });
+});
+  </script>
+</body>
+</html>
