@@ -20,7 +20,7 @@ app.use(express.static(path.join(__dirname, "public"), { maxAge: IS_PROD ? "7d" 
 
 if (!process.env.SESSION_SECRET) {
   if (IS_PROD) {
-    console.error("SESSION_SECRET is required in production");
+    console.error("SESSION_SECRET is required in production — set it in Render's Environment tab");
     process.exit(1);
   } else {
     console.warn("SESSION_SECRET not set — using dev fallback");
@@ -55,7 +55,7 @@ if (!fs.existsSync(UPLOAD_ROOT)) {
 
 const URI = process.env.MONGO_URI;
 if (!URI) {
-  console.error("MONGO_URI is missing in environment");
+  console.error("MONGO_URI is missing — set it in Render's Environment tab");
   process.exit(1);
 }
 
