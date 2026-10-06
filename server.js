@@ -423,11 +423,13 @@ app.get("/file/:id/raw", requireAuth, async (req, res) => {
 app.get("/file/:id/download", requireAuth, async (req, res) => {
   try {
     const file = await File.findById(req.params.id);
-    if (!file) return res.status(404).render("404", { message: "File not found" });
+    if (!file) {
+      return res.status(404).send("File not found");
+    }
 
     const filePath = path.join(UPLOAD_ROOT, file.owner.toString(), file.storedName);
     if (!fs.existsSync(filePath)) {
-      return res.status(404).render("404", { message: "File missing on disk" });
+      return res.status(404).send("File missing on disk");
     }
 
     await File.updateOne({ _id: file._id }, { $inc: { downloads: 1 } });
@@ -435,7 +437,7 @@ app.get("/file/:id/download", requireAuth, async (req, res) => {
     return res.download(filePath, file.originalName);
   } catch (err) {
     console.error("Download error:", err);
-    return res.status(500).render("404", { message: "Download failed" });
+    return res.status(500).send("Download failed");
   }
 });
 
@@ -556,9 +558,7 @@ app.get("/api/subscription-status/:userId", requireAuth, async (req, res) => {
 });
 
 app.use((req, res) => {
-  res.status(404).render("404", {
-    message: `The page "${req.originalUrl}" was not found.`,
-  });
+  res.status(404).send(`<h1>404 — Not Found</h1><p>The page "${req.originalUrl}" was not found.</p><p><a href="/">Go home</a></p>`);
 });
 
 app.use((err, req, res, next) => {
@@ -568,9 +568,9 @@ app.use((err, req, res, next) => {
     return res.status(400).render("upload", { error: "File is too large (max 50 MB)" });
   }
 
-  res.status(err.status || 500).render("404", {
-    message: IS_PROD ? "Something went wrong." : err.message || "Something went wrong.",
-  });
+  res.status(err.status || 500).send(
+    IS_PROD ? "Something went wrong." : `<pre>${err.message || "Something went wrong."}</pre>`
+  );
 });
 
 const PORT = process.env.PORT || 3000;
