@@ -312,7 +312,7 @@ app.post("/auth/signup", async (req, res) => {
     req.session.userId = user._id.toString();
     req.session.user = { id: user._id, name: user.name, email: user.email };
 
-    return res.status(201).json({ success: true, redirect: "/" });
+    return res.redirect("/");
   } catch (err) {
     if (err.code === 11000) {
       const field = Object.keys(err.keyPattern)[0];
@@ -349,7 +349,7 @@ app.post("/auth/login", async (req, res) => {
     req.session.userId = user._id.toString();
     req.session.user = { id: user._id, name: user.name, email: user.email };
 
-    return res.status(200).json({ success: true, redirect: "/" });
+    return res.redirect("/");
   } catch (err) {
     console.error("Login error:", err);
     return res.status(500).json({ success: false, error: "Something went wrong" });
